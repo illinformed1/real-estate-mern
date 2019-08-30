@@ -1,25 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, Component } from "react";
+import TopSection from "./components/top-section";
+import Icons from "./components/icons";
+import AgentListing from "./components/agent-listing";
+import Listings from "./components/listings";
+import Body from "./components/body";
+import { BrowserRouter as Router } from "react-router-dom";
+import AppProvider from "./components/app-context-provider";
+
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className="App">
+      <Router>
+        <AppProvider>
+          <TopSection /> {/* contains search bar*/}
+          <Body />
+          <Icons />
+          <AgentListing />
+          <Listings />
+        </AppProvider>
+      </Router>
+    </main>
   );
 }
 
