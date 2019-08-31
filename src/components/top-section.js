@@ -1,6 +1,6 @@
 import React from "react";
 import image from "./top-image.jpg";
-import Search from "./search-component /search-component";
+import Search from "./search-directory /search-component";
 import styled from "styled-components";
 
 export default function TopSection() {

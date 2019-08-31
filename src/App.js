@@ -3,22 +3,19 @@ import TopSection from "./components/top-section";
 import Icons from "./components/icons";
 import AgentListing from "./components/agent-listing";
 import Listings from "./components/listings";
-import Body from "./components/body";
+import Main from "./components/body";
 import { BrowserRouter as Router } from "react-router-dom";
 import AppProvider from "./components/app-context-provider";
-
-import "./App.css";
+import CreateListing from "./components/create-listing-directory/create-listing";
 
 function App() {
   return (
     <main className="App">
       <Router>
         <AppProvider>
-          <TopSection /> {/* contains search bar*/}
-          <Body />
-          <Icons />
-          <AgentListing />
-          <Listings />
+          {/* contains search bar*/}
+          <Main />
+          <CreateListing />
         </AppProvider>
       </Router>
     </main>

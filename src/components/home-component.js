@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import TopSection from "./top-section";
 
 export default function Home() {
   /*axios
@@ -12,12 +13,10 @@ export default function Home() {
     })
     .then(res => console.log(res.data));*/
 
-  axios
-    .get("http://localhost:4000/realestate/listings")
-    .then(res => console.log(res));
-
   return (
     <div>
+      <TopSection />
+
       <h1>Im home</h1>
     </div>
   );

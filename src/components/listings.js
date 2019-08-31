@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import styled from "styled-components";
 import ListingItem from "./listing-item";
 import axios from "axios";
+import TopSection from "./top-section";
 
 export default function Listings() {
   const [listings, setListings] = useState([]);
@@ -16,18 +17,21 @@ export default function Listings() {
   }, []);
 
   return (
-    <ListingGridStyle>
-      {listings.map((listing, index) => (
-        <ListingItem
-          key={index}
-          price={listing.price}
-          title={listing.title}
-          location={listing.location}
-          description={listing.description}
-          image={listing.image}
-        />
-      ))}
-    </ListingGridStyle>
+    <Fragment>
+      <TopSection />
+      <ListingGridStyle>
+        {listings.map((listing, index) => (
+          <ListingItem
+            key={index}
+            price={listing.price}
+            title={listing.title}
+            location={listing.location}
+            description={listing.description}
+            image={listing.image}
+          />
+        ))}
+      </ListingGridStyle>
+    </Fragment>
   );
 }
 
