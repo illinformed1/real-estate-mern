@@ -61,9 +61,9 @@ export const beds = [
   }
 ];
 
-export const features = [
+export let features = [
   {
-    key: "air-conditioning",
+    key: "air conditioning",
     text: "air conditioning",
     value: "air conditioning"
   },
@@ -84,8 +84,7 @@ export const features = [
   { key: "Floorboards", text: "Floorboards", value: "Floorboards" },
   { key: "Carpets", text: "Carpets", value: "Carpets" },
   { key: "Ensuite", text: "Ensuite", value: "Ensuite" },
-  { key: "Maid's Room", text: "Maid's Room", value: "Maid's Room" },
-  { key: "Ensuite", text: "Ensuite", value: "Ensuite" }
+  { key: "Maid's Room", text: "Maid's Room", value: "Maid's Room" }
 ];
 
 let cityOptions = philippines.cities.map((city, index) => {
