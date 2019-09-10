@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { storage } from "../firebase/index";
 import styled from "styled-components";
 
-export default function ImageUpload() {
+export default function ImageUpload({ setImageURL }) {
   const [files, setFiles] = useState();
 
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -10,12 +10,14 @@ export default function ImageUpload() {
   const [urlArray, addUrl] = useState([]);
 
   let handleSubmit = e => {
+    e.preventDefault();
     if (e.target.files[0]) {
       setFiles(e.target.files[0]);
     }
   };
 
-  let handleUpload = () => {
+  let handleUpload = e => {
+    e.preventDefault();
     const { name } = files;
     const uploadTask = storage.ref(`images/${name}`).put(files);
     uploadTask.on(
@@ -43,12 +45,13 @@ export default function ImageUpload() {
 
   return (
     <div>
-      {console.log(urlArray)}
+      {setImageURL(urlArray)}
+
       <ImageUploadStyle>
         <div className="img-input">
           <input type="file" onChange={e => handleSubmit(e)} />
 
-          <button onClick={handleUpload}>Submit</button>
+          <button onClick={e => handleUpload(e)}>Submit</button>
         </div>
         <div className="img-render">
           {urlArray.map((image, index) => (

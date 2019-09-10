@@ -11,10 +11,12 @@ export default function ListingTypeButtons() {
       <Button inverted color="blue">
         Buy
       </Button>
-      <Button inverted color="blue">
-        Share
-      </Button>
-      <Link to="/create">
+      <Link to="/share">
+        <Button inverted color="blue">
+          Share
+        </Button>
+      </Link>
+      <Link to="/createlisting">
         <Button inverted color="blue">
           List
         </Button>
