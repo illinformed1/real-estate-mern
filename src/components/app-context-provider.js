@@ -10,10 +10,8 @@ export default class AppProvider extends Component {
     setSearchInput: e => this.SearchInput(e),
     listings: [],
     currentPage: 1,
-    documentsInDB: 0,
-    //getDocsinDB: () => this.getDocsinDB(),
     handlePaginationClick: selection => this.handlePaginationClick(selection),
-    itemsPerPage: 2,
+    itemsPerPage: 5,
     searchResults: [],
     filterResults: () => this.filterResults()
   };
@@ -55,7 +53,9 @@ export default class AppProvider extends Component {
     const { currentPage, itemsPerPage } = this.state;
     const startAt = currentPage * itemsPerPage - itemsPerPage;
     const query = db
-      .collection("listings")
+      .collection("real-estate")
+      .doc("listings")
+      .collection("rent") //later pass route-params into functions to render either the rent or buy listings
       .orderBy("Num")
       .startAt(startAt)
       .limit(itemsPerPage);

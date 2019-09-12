@@ -11,7 +11,7 @@ import {
 } from "./listing-options";
 import ImageUpload from "../image-upload";
 
-export default function CreateListingForm({ assembleObject, getDocsinDB }) {
+export default function CreateListingForm({ assembleObject, setRentOrBuy }) {
   const [cities, setCities] = useState([]);
   const [provinces, setProvinces] = useState([]);
 
@@ -79,6 +79,7 @@ export default function CreateListingForm({ assembleObject, getDocsinDB }) {
   let handleTerm = (e, term) => {
     e.preventDefault();
     setTerms(term);
+    setRentOrBuy(term);
   };
 
   let deleteFeature = feature => {
@@ -141,7 +142,6 @@ export default function CreateListingForm({ assembleObject, getDocsinDB }) {
                 <div class="ui-dropdown-selction">
                   <label>Select City</label>
                   <Dropdown
-                    placeholder={() => (City === "" ? "Select City" : City)}
                     fluid
                     search
                     onClose={e => handleCloseWithoutSelection(e)}
@@ -218,7 +218,7 @@ export default function CreateListingForm({ assembleObject, getDocsinDB }) {
               <div class="form-group">
                 <h3 className="pay-heading">Payment Terms</h3>
                 <div class="form-group d-flex justify-content-center">
-                  <Button onClick={e => handleTerm(e, "sale")} color="blue">
+                  <Button onClick={e => handleTerm(e, "buy")} color="blue">
                     Sale
                   </Button>
                   <Button onClick={e => handleTerm(e, "rent")} color="blue">
@@ -229,7 +229,7 @@ export default function CreateListingForm({ assembleObject, getDocsinDB }) {
                 <div class="form-group">
                   <Input labelPosition="right" type="text" placeholder="Amount">
                     <Label basic>P</Label>
-                    <input onChange={e => setPrice(e.target.value)} />
+                    <input onChange={e => setPrice(e.target.value)} required />
                     <Label>Per Month</Label>
                   </Input>
                 </div>
