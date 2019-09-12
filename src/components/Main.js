@@ -5,6 +5,7 @@ import home from "./home-component";
 import CreateAccount from "./create-account-directory/create-account";
 import CreateListing from "./create-listing-directory/create-listing";
 import ShareComponent from "./share-directory/share-component";
+import IndividualListing from "./individual-listing";
 
 export default function Main() {
   return (
@@ -14,6 +15,7 @@ export default function Main() {
       <Route path="/create" component={CreateAccount} />
       <Route path="/createlisting" component={CreateListing} />
       <Route path="/share" component={ShareComponent} />
+      <Route path="/listing-item/:id" component={IndividualListing} />
     </div>
   );
 }

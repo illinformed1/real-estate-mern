@@ -10,10 +10,31 @@ export default class AppProvider extends Component {
     setSearchInput: e => this.SearchInput(e),
     listings: [],
     currentPage: 1,
-    itemsPerPage: 5,
+    documentsInDB: 0,
+    //getDocsinDB: () => this.getDocsinDB(),
+    handlePaginationClick: selection => this.handlePaginationClick(selection),
+    itemsPerPage: 2,
     searchResults: [],
     filterResults: () => this.filterResults()
   };
+
+  handlePaginationClick = selection => {
+    switch (selection) {
+      case "previous":
+        this.setState(prev => ({ currentPage: prev.currentPage - 1 }));
+
+        break;
+      case "next":
+        this.setState(prev => ({ currentPage: prev.currentPage + 1 }));
+
+        break;
+      default:
+        this.setState({ currentPage: selection });
+    }
+  };
+
+  /* the problem is that when try to paginate dynamically, I am getting the full list of blahs 
+ when I want the length of the list of blahs, but, I would rather not return all documents because it is expensive.  */
 
   filterResults = () => {
     const { searchInput } = this.state;
@@ -23,7 +44,6 @@ export default class AppProvider extends Component {
         listing.Province.includes(searchInput)
     );
     this.setState({ seachResults: filtered });
-    console.log("Search Results", this.state.seachResults);
   };
 
   SearchInput = e => {
@@ -36,7 +56,7 @@ export default class AppProvider extends Component {
     const startAt = currentPage * itemsPerPage - itemsPerPage;
     const query = db
       .collection("listings")
-      .orderBy("Title") //eventually I want to order by data added + featured listings
+      .orderBy("Num")
       .startAt(startAt)
       .limit(itemsPerPage);
     const snapshot = await query.get();
@@ -44,11 +64,25 @@ export default class AppProvider extends Component {
     return this.setState({ listings });
   };
 
+  /* As far as I can tell this is correct. The problem seems to be that create listing has the old data*/
+
   componentDidMount() {
     this.getListings();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.currentPage != prevState.currentPage) {
+      this.getListings();
+    }
+
+    console.log("prevState", prevState.listings);
+    console.log("currentState", this.state.listings);
+  }
+
   render() {
+    console.log("currentPage in render", this.state.currentPage);
+    console.log("listings in render", this.state.listings);
+    console.log("Documents in database", this.state.documentsInDB);
     return (
       <AppContext.Provider value={this.state}>
         {this.props.children}

@@ -41,11 +41,11 @@ export default function ListingItem({
   return (
     <CardStyling>
       <div style={{ position: "relative" }}>
-        {image.length > 1 ? (
+        {/*image.length > 1 ? (
           <span className="left-chevron" onClick={() => handleImageDecrement()}>
             <Icon name="chevron left" />
           </span>
-        ) : null}
+        ) : null*/}
 
         <img
           className="card-img"
@@ -53,7 +53,7 @@ export default function ListingItem({
           alt="Listing Card "
           style={{ height: "22rem" }}
         />
-        {image.length > 1 ? (
+        {/*image.length > 1 ? (
           <span
             className="right-chevron"
             onClick={() => handleImageIncrement()}
@@ -63,18 +63,18 @@ export default function ListingItem({
               style={{ position: "relative", left: "0.2rem" }}
             />
           </span>
-        ) : null}
+        ) : null*/}
 
         <div className="image-counter">
           <span>
-            {imageCount + 1}/{image.length}
+            {imageCount + 1}/{/*image.length*/}
           </span>
           <Icon name="image" />
         </div>
       </div>
 
-      <div className="card-text" onClick={() => console.log(id)}>
-        <Link to={`listing-item:${id}`}>
+      <div className="card-text" onClick={() => id}>
+        <Link to={`/listing-item/${id}`}>
           <h2 className="title">{title}</h2>
         </Link>
         <h3>{tagline}</h3>

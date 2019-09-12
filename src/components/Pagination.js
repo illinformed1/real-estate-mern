@@ -1,32 +1,40 @@
 import React from "react";
+/* Next problem 
 
-export default function Pagination({ setPageNum, pageNum }) {
+I want to dynamical display x many pages. Problem is, to do this I need to map through the listings. 
+
+
+*/
+
+export default function Pagination({ handlePaginationClick }) {
   return (
     <div>
       <nav aria-label="Page navigation example">
         <ul class="pagination">
           <li class="page-item">
-            <span class="page-link" onClick={() => setPageNum(pageNum - 1)}>
+            <span
+              class="page-link"
+              onClick={() => handlePaginationClick("previous")}
+            >
               Previous
             </span>
           </li>
           <li class="page-item">
-            <span class="page-link" onClick={() => setPageNum(1)}>
+            <span class="page-link" onClick={() => handlePaginationClick(1)}>
               1
             </span>
           </li>
           <li class="page-item">
-            <span class="page-link" onClick={() => setPageNum(2)}>
-              2
-            </span>
+            <span class="page-link">2</span>
           </li>
           <li class="page-item">
-            <span class="page-link" onClick={() => setPageNum(3)}>
-              3
-            </span>
+            <span class="page-link">3</span>
           </li>
           <li class="page-item">
-            <span class="page-link" onClick={() => setPageNum(pageNum + 1)}>
+            <span
+              class="page-link"
+              onClick={() => handlePaginationClick("next")}
+            >
               Next
             </span>
           </li>

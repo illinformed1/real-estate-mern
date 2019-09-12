@@ -5,39 +5,12 @@ import { AppContext } from "./app-context-provider";
 import Pagination from "./Pagination";
 
 let Listings = () => {
-  const [pageNum, setPageNum] = useState(1);
-  const itemsPerPage = 3;
-
-  // steps
-
-  // lastIndex 3 * 1 = 3
-  // firstIndex 3 - 3 = 0
-
-  //lastIndex 3 * 2 = 6
-  //first Index 6 - 3 = 3 - 1 is correct
-
-  let lastIndex = itemsPerPage * pageNum;
-  let firstIndex = () => {
-    if (pageNum > 1) {
-      return lastIndex - itemsPerPage - 1;
-    }
-  };
-
   return (
     <AppContext.Consumer>
-      {({ listings, searchResults }) => {
+      {({ listings, searchResults, handlePaginationClick }) => {
         let listingsOrSearch = () =>
           searchResults.length !== 0 ? searchResults : listings;
 
-        /* const paginatedListings = listingsOrSearch()
-        
-        .slice(
-          firstIndex(),
-          lastIndex
-        );
-*/
-
-        console.log(listings);
         return (
           <Fragment>
             <ListingGridStyle>
@@ -56,7 +29,7 @@ let Listings = () => {
                   image={listing.ImageURLArray}
                 />
               ))}
-              <Pagination setPageNum={setPageNum} pageNum={pageNum} />
+              <Pagination handlePaginationClick={handlePaginationClick} />
             </ListingGridStyle>
           </Fragment>
         );

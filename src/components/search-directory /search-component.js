@@ -38,15 +38,11 @@ step 3 = handle a search event
       filterResults,
       setSearchResultsToListings
     }) => {
-      console.log(searchInput);
-      console.log("listings", listings);
-      console.log("what am i", filterResults);
-
       //setSearchResults(filterResults);
 
       return (
         <div className="search-element">
-          {console.log("whats this", searchResults)}
+          {("whats this", searchResults)}
           <Segment inverted className="section">
             <ListingTypeButtons />
             <SearchBarInput

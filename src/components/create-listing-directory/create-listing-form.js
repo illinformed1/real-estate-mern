@@ -11,7 +11,7 @@ import {
 } from "./listing-options";
 import ImageUpload from "../image-upload";
 
-export default function CreateListingForm({ assembleObject }) {
+export default function CreateListingForm({ assembleObject, getDocsinDB }) {
   const [cities, setCities] = useState([]);
   const [provinces, setProvinces] = useState([]);
 
@@ -21,7 +21,7 @@ export default function CreateListingForm({ assembleObject }) {
 
   let setProvince = city => {
     //province.key === city.province
-    console.log("am i the city", city);
+
     let province = provinces.filter(province => province.key === city.province);
 
     associateProvince(province[0].text);
@@ -35,7 +35,7 @@ export default function CreateListingForm({ assembleObject }) {
     let feature = features.find(
       feature => feature.text === e.target.textContent
     );
-    console.log(feature);
+
     setSelectedFeatures([...selectedFeatures, feature]);
 
     /* the first time it run or when nothing has been selected it takes the imported array and copies it into state
@@ -106,7 +106,7 @@ export default function CreateListingForm({ assembleObject }) {
   return (
     <div>
       <CreateFormStyle>
-        {console.log(ImageURLArray)}
+        {ImageURLArray}
         <div className="form-wrapper">
           <div className="background p-5 border border-info">
             <h2 className="header">Let's Create That Listing</h2>
@@ -292,7 +292,7 @@ const CreateFormStyle = styled.div`
   background: url("/background-create-listing.jpg");
   background-size: cover;
 
-  justify-content: center;
+  align-items: center;
 
   .header {
     margin-bottom: 2rem;
@@ -308,12 +308,6 @@ const CreateFormStyle = styled.div`
   .image-upload-box {
     height: min-content;
     background: linear-gradient(#09476f, #2e8c8a);
-  }
-  .form-wrapper {
-    display: grid;
-
-    justify-items: center;
-    grid-template-columns: 1fr 1fr;
   }
 
   .pay-heading {
