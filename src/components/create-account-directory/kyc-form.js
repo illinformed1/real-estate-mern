@@ -1,13 +1,18 @@
 import React from "react";
 import styled from "styled-components";
-import ImageUpload from "../image-upload";
-export default function KycForm() {
+import KycUpload from "./kyc-upload";
+export default function KycForm({ setKycImageArray }) {
   return (
     <KycStyles>
       <div className="left">
         <h2>Selfie Verification</h2>
-        <img src="/selfie-verification.png" height="300px" width="300px" />
-        <ImageUpload />
+        <img
+          src="/selfie-verification.png"
+          alt="selfie-verification"
+          height="300px"
+          width="300px"
+        />
+        <KycUpload />
       </div>
       <div className="right">
         <h2 className="doc-dets">Document Details Forum</h2>
@@ -34,6 +39,7 @@ export default function KycForm() {
           </li>
         </ul>
       </div>
+      <button>Submit for verification</button>
     </KycStyles>
   );
 }

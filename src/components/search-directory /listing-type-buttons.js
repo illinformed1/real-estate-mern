@@ -5,12 +5,16 @@ import { Link } from "react-router-dom";
 export default function ListingTypeButtons() {
   return (
     <div>
-      <Button inverted color="blue">
-        Rent
-      </Button>
-      <Button inverted color="blue">
-        Buy
-      </Button>
+      <Link to="/listings/rent">
+        <Button inverted color="blue">
+          Rent
+        </Button>
+      </Link>
+      <Link to="/listings/buy">
+        <Button inverted color="blue">
+          Buy
+        </Button>
+      </Link>
       <Link to="/share">
         <Button inverted color="blue">
           Share

@@ -107,7 +107,6 @@ export default function CreateListingForm({ assembleObject, setRentOrBuy }) {
   return (
     <div>
       <CreateFormStyle>
-        {ImageURLArray}
         <div className="form-wrapper">
           <div className="background p-5 border border-info">
             <h2 className="header">Let's Create That Listing</h2>

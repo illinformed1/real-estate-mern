@@ -19,6 +19,7 @@ firebase.auth().useDeviceLanguage();
 const storage = firebase.storage();
 const auth = firebase.auth();
 var db = firebase.firestore();
+
 db.settings({ timestampsInSnapshots: true });
 
 export { storage, auth, db, firebase as default };

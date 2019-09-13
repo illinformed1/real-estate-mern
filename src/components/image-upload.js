@@ -51,7 +51,7 @@ export default function ImageUpload({ setImageURL }) {
         <div className="img-input">
           <input type="file" onChange={e => handleSubmit(e)} />
 
-          <button onClick={e => handleUpload(e)}>Submit</button>
+          <button onClick={e => handleUpload(e)}>Upload</button>
         </div>
         <div className="img-render">
           {urlArray.map((image, index) => (

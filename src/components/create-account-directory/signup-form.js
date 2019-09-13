@@ -1,108 +1,48 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import firebase from "../../firebase/index";
 
-export default function SignupForm({
-  generateVerification,
-  phoneConfirmation,
-  setCode
-}) {
+export default function SignupForm({ setSteps, steps, createNewUser }) {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
+  const uiConfig = {
+    // Popup signin flow rather than redirect flow.
+    signInFlow: "popup",
+    // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
+    signInSuccessUrl: "/signedIn",
+    // We will display Google and Facebook as auth providers.
+    signInOptions: [
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+      firebase.auth.PhoneAuthProvider.PROVIDER_ID
+    ],
+    callbacks: {
+      // Avoid redirects after sign-in.
+      signInSuccessWithAuthResult: user => {
+        console.log(user);
+        if (user.additionalUserInfo.isNewUser === true) {
+          createNewUser(user.user.uid);
+        }
+      }
+    }
+  };
 
   return (
     <FormStyling>
-      <form className="border border-info p-5">
-        <h3>To Sell On Our Platform </h3>
+      <div className="border border-info p-5 sign-in">
+        <h3>To List A Property On Our Platform </h3>
+        <StyledFirebaseAuth
+          uiConfig={uiConfig}
+          firebaseAuth={firebase.auth()}
+        />
 
-        <h2>Create An Account</h2>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%"
-          }}
-        >
-          <div class="form-group">
-            <label for="InputFirstName">FIRST NAME</label>
-            <input
-              type="text"
-              class="form-control transparent-input"
-              id="InputFirstName"
-              placeholder="first name"
-            />
-          </div>
-          <div class="form-group">
-            <label for="exampleInputEmail1">LAST NAME</label>
-            <input
-              type="text"
-              class="form-control transparent-input"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-              placeholder="last name"
-            />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="exampleInputEmail1">EMAIL</label>
-          <input
-            type="email"
-            class="form-control"
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            placeholder="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">PASSWORD</label>
-          <input
-            type="password"
-            class="form-control"
-            id="exampleInputPassword1"
-            placeholder="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-          />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputEmail1">PHONE NUMBER</label>
-          <input
-            type="text"
-            class="form-control "
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            placeholder="number"
-          />
-        </div>
-
-        <label>Enter Phone Confirmation</label>
-        <div style={{ display: "flex" }}>
-          <input
-            type="text"
-            class="form-control "
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            placeholder="Enter Code"
-            onChange={e => setCode(e.target.value)}
-          />
-          <button onClick={e => generateVerification(e)}>One Time Code</button>
-        </div>
-        <button
-          onClick={e => {
-            phoneConfirmation(e, email, password);
-          }}
-          class="btn btn-info"
-        >
-          Submit
-        </button>
         <p>
           by creating an account you agree to all our{" "}
           <a href="#">terms and condition</a> and our{" "}
           <a href="#">privacy policiy</a>{" "}
         </p>
-        <div id="recaptcha-container" />
-      </form>
+      </div>
     </FormStyling>
   );
 }
@@ -116,7 +56,7 @@ const FormStyling = styled.div`
   color: white;
   align-items: center;
 
-  form {
+  .sign-in {
     background: linear-gradient(#09476f, #2e8c8a);
   }
   h3 {

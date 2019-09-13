@@ -4,59 +4,23 @@ import styled from "styled-components";
 import StepBar from "./step-bar";
 import SignupForm from "./signup-form";
 import KycForm from "./kyc-form";
-import firebase from "../../firebase/index";
+import { AppContext } from "../app-context-provider";
+import { db } from "../../firebase/index";
 
 export default function CreateAccount() {
-  const [steps, setSteps] = useState(1);
-  const [code, setCode] = useState("");
-  const [verificationID, setVerificationID] = useState("");
-  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [steps, setSteps] = useState(2);
+  const [kycImageArray, setKycImageArray] = useState();
 
-  useEffect(() => {
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-      "recaptcha-container",
-      {
-        size: "invisible"
-        // other options
-      }
-    );
-  }, []);
+  /* add KYC images to data-base */
 
-  let generateVerification = e => {
-    e.preventDefault();
-    const phoneNumber = "+61424988746";
-    const applicationVerifier = window.recaptchaVerifier;
+  /* needs to be added to a specific user account
 
-    var provider = new firebase.auth.PhoneAuthProvider();
-    provider
-      .verifyPhoneNumber(phoneNumber, applicationVerifier)
-      .then(function(verificationId) {
-        setVerificationID(verificationId);
-      });
-  };
+/* I have user ID where is the best place to add KYC info*/
 
-  let phoneConfirmation = () => {
-    firebase.auth.PhoneAuthProvider.credential(verificationID, code)
-      .then(function(phoneCredential) {
-        return firebase.auth().signInWithCredential(phoneCredential);
-      })
-      .then(steps + 1);
-  };
-
-  let handleSubmit = (e, email, password) => {
-    e.preventDefault();
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .catch(function(error) {
-        // Handle Errors here.
-        console.log(error);
-      });
-    if (phoneVerified === true) {
-      setSteps(Step + 1);
-    } else {
-      console.log("phone not verified");
-    }
+  let createNewUser = uid => {
+    db.collection("users").add({
+      userID: uid
+    });
   };
 
   let renderStep = () => {
@@ -64,22 +28,31 @@ export default function CreateAccount() {
       case 1:
         return (
           <SignupForm
-            setCode={setCode}
-            handleSubmit={handleSubmit}
-            generateVerification={generateVerification}
-            phoneConfirmation={phoneConfirmation}
+            createNewUser={createNewUser}
+            setSteps={setSteps}
+            steps={steps}
           />
         );
       case 2:
-        return <KycForm />;
+        return <KycForm setKycImageArray={setKycImageArray} />;
+      default:
+        return null;
     }
   };
 
   return (
     <Fragment>
-      <StepBar steps={steps} />
-      {renderStep()}
-      {/**/}
+      <AppContext.Consumer>
+        {({ test }) => {
+          console.log("All hooked up", test);
+          return (
+            <div>
+              <StepBar steps={steps} />
+              {renderStep()}
+            </div>
+          );
+        }}
+      </AppContext.Consumer>
     </Fragment>
   );
 }

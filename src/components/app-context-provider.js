@@ -13,7 +13,11 @@ export default class AppProvider extends Component {
     handlePaginationClick: selection => this.handlePaginationClick(selection),
     itemsPerPage: 5,
     searchResults: [],
-    filterResults: () => this.filterResults()
+    page: "rent", //defaults to rent
+    setPage: page => this.setPage(page),
+    filterResults: () => this.filterResults(),
+    setkycImageArray: () => this.setKycImageArray(),
+    kycImageArray: []
   };
 
   handlePaginationClick = selection => {
@@ -44,9 +48,19 @@ export default class AppProvider extends Component {
     this.setState({ seachResults: filtered });
   };
 
+  setKycImageArray = item => {
+    const newArray = [...this.state.kycImageArray, item];
+    this.setState({ kycImageArray: newArray });
+  };
+
   SearchInput = e => {
     this.setState({ searchInput: e.target.value });
     this.filterResults(e.target.value);
+  };
+
+  setPage = page => {
+    this.setState({ page });
+    console.log("i ran");
   };
 
   getListings = async () => {
@@ -55,7 +69,7 @@ export default class AppProvider extends Component {
     const query = db
       .collection("real-estate")
       .doc("listings")
-      .collection("rent") //later pass route-params into functions to render either the rent or buy listings
+      .collection(this.state.page) //later pass route-params into functions to render either the rent or buy listings
       .orderBy("Num")
       .startAt(startAt)
       .limit(itemsPerPage);
@@ -63,9 +77,6 @@ export default class AppProvider extends Component {
     const listings = snapshot.docs.map(doc => doc.data());
     return this.setState({ listings });
   };
-
-  /* As far as I can tell this is correct. The problem seems to be that create listing has the old data*/
-
   componentDidMount() {
     this.getListings();
   }
@@ -80,9 +91,7 @@ export default class AppProvider extends Component {
   }
 
   render() {
-    console.log("currentPage in render", this.state.currentPage);
-    console.log("listings in render", this.state.listings);
-    console.log("Documents in database", this.state.documentsInDB);
+    console.log("rent or buy", this.state.page);
     return (
       <AppContext.Provider value={this.state}>
         {this.props.children}
