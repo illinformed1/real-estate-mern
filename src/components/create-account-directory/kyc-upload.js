@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { storage } from "../../firebase/index";
+import { db } from "../../firebase/index";
 import styled from "styled-components";
 import { AppContext } from "../app-context-provider";
+import { getPackedSettings } from "http2";
 
 export default function KycUpload() {
   const [files, setFiles] = useState();
@@ -24,7 +26,16 @@ export default function KycUpload() {
 
   return (
     <AppContext.Consumer>
-      {({ setkycImageArray, kycImageArray }) => {
+      {({ setkycImageArray, kycImageArray, loggedInUser }) => {
+        /* add kyc image array to a user that lives in the app context */
+
+        /*let addKycToUserDoc = db
+          .collection("users")
+          .doc("loggedInUser")
+          .update({
+            KycPhotos: kycImageArray
+          });*/
+
         console.log("kycimagearray", kycImageArray);
         let handleUpload = e => {
           e.preventDefault();
@@ -47,10 +58,12 @@ export default function KycUpload() {
                 .child(name)
                 .getDownloadURL()
                 .then(url => {
+                  console.log("url test", url);
                   setkycImageArray(url);
                 });
             }
           );
+          //addKycToUserDoc();
         };
 
         /* Hey Future Dean Fix this */
@@ -58,6 +71,7 @@ export default function KycUpload() {
         return (
           <div>
             <ImageUploadStyle>
+              {console.log(kycImageArray)}
               <div className="img-input">
                 <input type="file" onChange={e => handleSubmit(e)} />
 

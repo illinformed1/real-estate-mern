@@ -1,49 +1,55 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import firebase from "../../firebase/index";
+import { AppContext } from "../app-context-provider";
 
 export default function SignupForm({ setSteps, steps, createNewUser }) {
-  const [email, setEmail] = useState("");
-
-  const uiConfig = {
-    // Popup signin flow rather than redirect flow.
-    signInFlow: "popup",
-    // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-    signInSuccessUrl: "/signedIn",
-    // We will display Google and Facebook as auth providers.
-    signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      firebase.auth.PhoneAuthProvider.PROVIDER_ID
-    ],
-    callbacks: {
-      // Avoid redirects after sign-in.
-      signInSuccessWithAuthResult: user => {
-        console.log(user);
-        if (user.additionalUserInfo.isNewUser === true) {
-          createNewUser(user.user.uid);
-        }
-      }
-    }
-  };
-
   return (
-    <FormStyling>
-      <div className="border border-info p-5 sign-in">
-        <h3>To List A Property On Our Platform </h3>
-        <StyledFirebaseAuth
-          uiConfig={uiConfig}
-          firebaseAuth={firebase.auth()}
-        />
+    <AppContext.Consumer>
+      {({ setLoggedInUser }) => {
+        const uiConfig = {
+          // Popup signin flow rather than redirect flow.
+          signInFlow: "popup",
+          // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
+          // We will display Google and Facebook as auth providers.
+          signInOptions: [
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            firebase.auth.PhoneAuthProvider.PROVIDER_ID
+          ],
+          callbacks: {
+            // Avoid redirects after sign-in.
+            signInSuccessWithAuthResult: user => {
+              console.log(user);
+              if (user.additionalUserInfo.isNewUser === true) {
+                createNewUser(user.user.uid);
+                setLoggedInUser(user.user.uid);
+              } else {
+                setLoggedInUser(user.user.uid);
+              }
+            }
+          }
+        };
 
-        <p>
-          by creating an account you agree to all our{" "}
-          <a href="#">terms and condition</a> and our{" "}
-          <a href="#">privacy policiy</a>{" "}
-        </p>
-      </div>
-    </FormStyling>
+        return (
+          <FormStyling>
+            <div className="border border-info p-5 sign-in">
+              <h3>To List A Property On Our Platform </h3>
+              <StyledFirebaseAuth
+                uiConfig={uiConfig}
+                firebaseAuth={firebase.auth()}
+              />
+
+              <p>
+                by creating an account you agree to all our{" "}
+                <a href="#">terms and condition</a> and our{" "}
+                <a href="#">privacy policiy</a>{" "}
+              </p>
+            </div>
+          </FormStyling>
+        );
+      }}
+    </AppContext.Consumer>
   );
 }
 

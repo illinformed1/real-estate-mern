@@ -8,7 +8,7 @@ import { AppContext } from "../app-context-provider";
 import { db } from "../../firebase/index";
 
 export default function CreateAccount() {
-  const [steps, setSteps] = useState(2);
+  const [steps, setSteps] = useState(1);
   const [kycImageArray, setKycImageArray] = useState();
 
   /* add KYC images to data-base */

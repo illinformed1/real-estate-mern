@@ -16,8 +16,10 @@ export default class AppProvider extends Component {
     page: "rent", //defaults to rent
     setPage: page => this.setPage(page),
     filterResults: () => this.filterResults(),
-    setkycImageArray: () => this.setKycImageArray(),
-    kycImageArray: []
+    setkycImageArray: item => this.setKycImageArray(item),
+    kycImageArray: [],
+    loggedInUser: "",
+    setLoggedInUser: user => this.setUser(user)
   };
 
   handlePaginationClick = selection => {
@@ -34,6 +36,19 @@ export default class AppProvider extends Component {
         this.setState({ currentPage: selection });
     }
   };
+
+  setUser = user => {
+    this.setState({ loggedInUser: user });
+  };
+
+  /* Now I have an array of images added to the KYC image array... The next step is to upload them to the document of a specific user
+  
+  ideas...I need to store the specific user in state. 
+
+  query according to that user and pass it the kyc Image array. 
+  
+  
+  */
 
   /* the problem is that when try to paginate dynamically, I am getting the full list of blahs 
  when I want the length of the list of blahs, but, I would rather not return all documents because it is expensive.  */
@@ -91,7 +106,7 @@ export default class AppProvider extends Component {
   }
 
   render() {
-    console.log("rent or buy", this.state.page);
+    console.log("logged In User Test", this.state.loggedInUser);
     return (
       <AppContext.Provider value={this.state}>
         {this.props.children}
