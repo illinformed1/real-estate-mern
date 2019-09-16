@@ -12,7 +12,7 @@ export default function IndividualListing(props) {
     let getListing = async () => {
       try {
         let data = await db
-          .collection("listings")
+          .collection("real-estate").doc("listings").collection("rent")
           .doc(props.match.params.id)
           .get();
 
@@ -64,7 +64,7 @@ export default function IndividualListing(props) {
               </ul>
             </div>
           </div>
-          {listing}
+         
         </ListingStyle>
       </Fragment>
     );

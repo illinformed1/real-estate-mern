@@ -3,9 +3,9 @@ import { storage } from "../../firebase/index";
 import { db } from "../../firebase/index";
 import styled from "styled-components";
 import { AppContext } from "../app-context-provider";
-import { getPackedSettings } from "http2";
 
-export default function KycUpload() {
+
+export default function KycUpload({steps, setSteps}) {
   const [files, setFiles] = useState();
 
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -26,15 +26,34 @@ export default function KycUpload() {
 
   return (
     <AppContext.Consumer>
-      {({ setkycImageArray, kycImageArray, loggedInUser }) => {
+      {({ setkycImageArray, kycImageArray, loggedInUser}) => {
         /* add kyc image array to a user that lives in the app context */
 
-        /*let addKycToUserDoc = db
-          .collection("users")
-          .doc("loggedInUser")
-          .update({
+
+
+        /* db.collection("cities").where("capital", "==", true)
+            .get()
+            .then(function(querySnapshot) {
+                querySnapshot.forEach(function(doc) {
+                    // doc.data() is never undefined for query doc snapshots
+                    console.log(doc.id, " => ", doc.data());
+                });
+            })
+            .catch(function(error) {
+                console.log("Error getting documents: ", error);
+            });
+         */
+
+
+
+        let addKycToUserDoc = async () => {
+          
+          await db
+          .collection("users").doc(loggedInUser).update({
             KycPhotos: kycImageArray
-          });*/
+          })
+            setSteps(steps + 1 )
+        }
 
         console.log("kycimagearray", kycImageArray);
         let handleUpload = e => {
@@ -63,7 +82,6 @@ export default function KycUpload() {
                 });
             }
           );
-          //addKycToUserDoc();
         };
 
         /* Hey Future Dean Fix this */
@@ -86,6 +104,7 @@ export default function KycUpload() {
                   />
                 ))}
               </div>
+              <button onClick={() => addKycToUserDoc()}>Submit for verification</button>
             </ImageUploadStyle>
           </div>
         );

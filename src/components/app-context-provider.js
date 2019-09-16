@@ -101,12 +101,18 @@ export default class AppProvider extends Component {
       this.getListings();
     }
 
+    if (this.state.page != prevState.page) {
+      this.getListings();
+    }
+
+   
+
     console.log("prevState", prevState.listings);
     console.log("currentState", this.state.listings);
   }
 
   render() {
-    console.log("logged In User Test", this.state.loggedInUser);
+    console.log("rent buy test", this.state.page);
     return (
       <AppContext.Provider value={this.state}>
         {this.props.children}

@@ -21,12 +21,14 @@ export default function SignupForm({ setSteps, steps, createNewUser }) {
             // Avoid redirects after sign-in.
             signInSuccessWithAuthResult: user => {
               console.log(user);
-              if (user.additionalUserInfo.isNewUser === true) {
+            //  if (user.additionalUserInfo.isNewUser === true) {
                 createNewUser(user.user.uid);
                 setLoggedInUser(user.user.uid);
-              } else {
-                setLoggedInUser(user.user.uid);
-              }
+                setSteps(steps + 1)
+             // } else {
+               // setLoggedInUser(user.user.uid);
+             //   setSteps(steps + 1)
+              //}
             }
           }
         };

@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Button, Checkbox, Form, Segment, Step, Icon } from "semantic-ui-react";
-import styled from "styled-components";
+import WaitForVerfication from "./wait-for-verification";
 import StepBar from "./step-bar";
 import SignupForm from "./signup-form";
 import KycForm from "./kyc-form";
@@ -18,8 +18,8 @@ export default function CreateAccount() {
 /* I have user ID where is the best place to add KYC info*/
 
   let createNewUser = uid => {
-    db.collection("users").add({
-      userID: uid
+    db.collection("users").doc(uid).set({
+      test: 5
     });
   };
 
@@ -34,7 +34,11 @@ export default function CreateAccount() {
           />
         );
       case 2:
-        return <KycForm setKycImageArray={setKycImageArray} />;
+        return <KycForm steps={steps} setSteps={setSteps} setKycImageArray={setKycImageArray} />;
+
+        case 3: 
+        return <WaitForVerfication steps={steps} setSteps={setSteps}/>
+
       default:
         return null;
     }
