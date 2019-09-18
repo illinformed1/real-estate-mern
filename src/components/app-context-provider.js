@@ -9,7 +9,8 @@ export default class AppProvider extends Component {
     searchInput: "",
     setSearchInput: e => this.SearchInput(e),
     listings: [],
-    currentPage: 1,
+    userConfirmed: false,
+    setUserConfirmed: () => this.setUserConfirmed(),
     handlePaginationClick: selection => this.handlePaginationClick(selection),
     itemsPerPage: 5,
     searchResults: [],
@@ -35,6 +36,10 @@ export default class AppProvider extends Component {
       default:
         this.setState({ currentPage: selection });
     }
+  };
+
+  setUserConfirmed = () => {
+    this.setState({ userConfirmed: true });
   };
 
   setUser = user => {
@@ -104,8 +109,6 @@ export default class AppProvider extends Component {
     if (this.state.page != prevState.page) {
       this.getListings();
     }
-
-   
 
     console.log("prevState", prevState.listings);
     console.log("currentState", this.state.listings);

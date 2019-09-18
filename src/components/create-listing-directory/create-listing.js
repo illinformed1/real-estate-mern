@@ -3,6 +3,7 @@ import CreateListingForm from "./create-listing-form";
 import { db } from "../../firebase/index";
 
 import firebase, { firestore } from "firebase";
+import { AppContext } from "../app-context-provider";
 
 class CreateListing extends React.Component {
   state = {
@@ -57,125 +58,158 @@ class CreateListing extends React.Component {
   }
 
   render() {
-    let assembleObject = async (e, obj) => {
-      e.preventDefault();
-      await this.updateBuyDocsinDB();
-      await this.updateRentDocsinDB();
-
-      console.log("in render", this.state.documentsInDB);
-
-      const increment = firebase.firestore.FieldValue.increment(1);
-
-      // try {
-      if (this.state.rentOrBuy === "rent") {
-        /* Batch updates the count in --stats-- as new documents are added*/
-
-        const statsRef = db.collection("real-estate").doc("--stats--");
-        const batch = db.batch();
-        batch.set(statsRef, { rentDocs: increment }, { merge: true });
-        batch.commit();
-
-        /* Creates the new listing from the info entered into the listing-form .then() gets the ID and assigns it to a property because Firebase is annoying.
-I don't know if this is best practice. Will use later as route params 
-*/
-
-        db.collection("real-estate")
-          .doc("listings")
-          .collection("rent")
-          .add({
-            Num: this.state.rentDocumentsInDB,
-            CreatedAt: firestore.FieldValue.serverTimestamp(),
-            Type: obj.Type,
-            Title: obj.Title,
-            Tagline: obj.Tagline,
-            City: obj.City,
-            Province: obj.associatedProvince,
-            Beds: obj.Beds,
-            Baths: obj.Baths,
-            Cars: obj.Cars,
-            Features: obj.selectedFeatures,
-            Terms: obj.Terms,
-            Price: obj.Price,
-            Bond: obj.Bond,
-            Description: obj.Description,
-            ImageURLArray: obj.ImageURLArray
-          })
-          .then(doc =>
-            db
-              .collection("real-estate")
-              .doc("listings")
-              .collection("rent")
-              .doc(doc.id)
-              .set(
-                {
-                  ID: doc.id
-                },
-                { merge: true }
-              )
-          );
-      } else if (this.state.rentOrBuy === "buy") {
-        /* Batch updates the count in --stats-- as new documents are added*/
-
-        const statsRef = db.collection("real-estate").doc("--stats--");
-        const batch = db.batch();
-        batch.set(statsRef, { buyDocs: increment }, { merge: true });
-        batch.commit();
-
-        /* Creates the new listing from the info entered into the listing-form .then() gets the ID and assigns it to a property because Firebase is annoying.
-I don't know if this is best practice. Will use later as route params 
-*/
-
-        db.collection("real-estate")
-          .doc("listings")
-          .collection("buy")
-          .add({
-            Num: this.state.buyDocumentsInDB,
-            CreatedAt: firestore.FieldValue.serverTimestamp(),
-            Type: obj.Type,
-            Title: obj.Title,
-            Tagline: obj.Tagline,
-            City: obj.City,
-            Province: obj.associatedProvince,
-            Beds: obj.Beds,
-            Baths: obj.Baths,
-            Cars: obj.Cars,
-            Features: obj.selectedFeatures,
-            Terms: obj.Terms,
-            Price: obj.Price,
-            Bond: obj.Bond,
-            Description: obj.Description,
-            ImageURLArray: obj.ImageURLArray
-          })
-          .then(doc =>
-            db
-              .collection("real-estate")
-              .doc("listings")
-              .collection("buy")
-              .doc(doc.id)
-              .set(
-                {
-                  ID: doc.id
-                },
-                { merge: true }
-              )
-          );
-        // } else {
-        //throw new Error(
-        //"This listing isn't for rent or sale. Please select one of the options"
-        //  );
-      }
-      //} catch (e) {
-      //alert(e);
-      // }
-    };
-
     return (
-      <div>
-        <CreateListingForm
-          setRentOrBuy={this.setRentOrBuy}
-          assembleObject={assembleObject}
-        />
-      </div>
+      <AppContext.Consumer>
+        {({ loggedInUser }) => {
+          console.log("logged in user in create listing", loggedInUser);
+
+          let assembleObject = async (e, obj) => {
+            e.preventDefault();
+            await this.updateBuyDocsinDB();
+            await this.updateRentDocsinDB();
+
+            console.log("in render", this.state.documentsInDB);
+
+            const increment = firebase.firestore.FieldValue.increment(1);
+
+            db.collection("users")
+              .doc(loggedInUser.uid)
+              .collection("listings")
+              .add({
+                Num: this.state.rentDocumentsInDB,
+                CreatedAt: firestore.FieldValue.serverTimestamp(),
+                Type: obj.Type,
+                Title: obj.Title,
+                Tagline: obj.Tagline,
+                City: obj.City,
+                Province: obj.associatedProvince,
+                Beds: obj.Beds,
+                Baths: obj.Baths,
+                Cars: obj.Cars,
+                Features: obj.selectedFeatures,
+                Terms: obj.Terms,
+                Price: obj.Price,
+                Bond: obj.Bond,
+                Description: obj.Description,
+                ImageURLArray: obj.ImageURLArray
+              });
+
+            // try {
+            if (this.state.rentOrBuy === "rent") {
+              /* Batch updates the count in --stats-- as new documents are added*/
+
+              const statsRef = db.collection("real-estate").doc("--stats--");
+              const batch = db.batch();
+              batch.set(statsRef, { rentDocs: increment }, { merge: true });
+              batch.commit();
+
+              /* Creates the new listing from the info entered into the listing-form .then() gets the ID and assigns it to a property because Firebase is annoying.
+I don't know if this is best practice. Will use later as route params 
+
+*/
+
+              db.collection("real-estate")
+                .doc("listings")
+                .collection("rent")
+                .add({
+                  Num: this.state.rentDocumentsInDB,
+                  CreatedAt: firestore.FieldValue.serverTimestamp(),
+                  Type: obj.Type,
+                  Title: obj.Title,
+                  Tagline: obj.Tagline,
+                  City: obj.City,
+                  Province: obj.associatedProvince,
+                  Beds: obj.Beds,
+                  Baths: obj.Baths,
+                  Cars: obj.Cars,
+                  Features: obj.selectedFeatures,
+                  Terms: obj.Terms,
+                  Price: obj.Price,
+                  Bond: obj.Bond,
+                  Description: obj.Description,
+                  ImageURLArray: obj.ImageURLArray
+                })
+                .then(doc =>
+                  db
+                    .collection("real-estate")
+                    .doc("listings")
+                    .collection("rent")
+                    .doc(doc.id)
+                    .set(
+                      {
+                        ID: doc.id
+                      },
+                      { merge: true }
+                    )
+                );
+
+              /* <--------- Add Same Listing To A Specific User ------------> */
+            } else if (this.state.rentOrBuy === "buy") {
+              /* Batch updates the count in --stats-- as new documents are added*/
+
+              const statsRef = db.collection("real-estate").doc("--stats--");
+              const batch = db.batch();
+              batch.set(statsRef, { buyDocs: increment }, { merge: true });
+              batch.commit();
+
+              /* Creates the new listing from the info entered into the listing-form .then() gets the ID and assigns it to a property because Firebase is annoying.
+I don't know if this is best practice. Will use later as route params 
+*/
+
+              db.collection("real-estate")
+                .doc("listings")
+                .collection("buy")
+                .add({
+                  Num: this.state.buyDocumentsInDB,
+                  CreatedAt: firestore.FieldValue.serverTimestamp(),
+                  Type: obj.Type,
+                  Title: obj.Title,
+                  Tagline: obj.Tagline,
+                  City: obj.City,
+                  Province: obj.associatedProvince,
+                  Beds: obj.Beds,
+                  Baths: obj.Baths,
+                  Cars: obj.Cars,
+                  Features: obj.selectedFeatures,
+                  Terms: obj.Terms,
+                  Price: obj.Price,
+                  Bond: obj.Bond,
+                  Description: obj.Description,
+                  ImageURLArray: obj.ImageURLArray
+                })
+                .then(doc =>
+                  db
+                    .collection("real-estate")
+                    .doc("listings")
+                    .collection("buy")
+                    .doc(doc.id)
+                    .set(
+                      {
+                        ID: doc.id
+                      },
+                      { merge: true }
+                    )
+                );
+              // } else {
+              //throw new Error(
+              //"This listing isn't for rent or sale. Please select one of the options"
+              //  );
+            }
+            //} catch (e) {
+            //alert(e);
+            // }
+          };
+
+          return (
+            <div>
+              <CreateListingForm
+                setRentOrBuy={this.setRentOrBuy}
+                assembleObject={assembleObject}
+              />
+            </div>
+          );
+        }}
+      </AppContext.Consumer>
     );
   }
 }

@@ -18,9 +18,11 @@ export default function CreateAccount() {
 /* I have user ID where is the best place to add KYC info*/
 
   let createNewUser = uid => {
-    db.collection("users").doc(uid).set({
-      test: 5
-    });
+    db.collection("users")
+      .doc(uid)
+      .set({
+        test: 5
+      });
   };
 
   let renderStep = () => {
@@ -34,10 +36,16 @@ export default function CreateAccount() {
           />
         );
       case 2:
-        return <KycForm steps={steps} setSteps={setSteps} setKycImageArray={setKycImageArray} />;
+        return (
+          <KycForm
+            steps={steps}
+            setSteps={setSteps}
+            setKycImageArray={setKycImageArray}
+          />
+        );
 
-        case 3: 
-        return <WaitForVerfication steps={steps} setSteps={setSteps}/>
+      case 3:
+        return <WaitForVerfication steps={steps} setSteps={setSteps} />;
 
       default:
         return null;

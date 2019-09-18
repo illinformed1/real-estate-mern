@@ -4,8 +4,7 @@ import { db } from "../../firebase/index";
 import styled from "styled-components";
 import { AppContext } from "../app-context-provider";
 
-
-export default function KycUpload({steps, setSteps}) {
+export default function KycUpload({ steps, setSteps }) {
   const [files, setFiles] = useState();
 
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -26,10 +25,8 @@ export default function KycUpload({steps, setSteps}) {
 
   return (
     <AppContext.Consumer>
-      {({ setkycImageArray, kycImageArray, loggedInUser}) => {
+      {({ setkycImageArray, kycImageArray, loggedInUser }) => {
         /* add kyc image array to a user that lives in the app context */
-
-
 
         /* db.collection("cities").where("capital", "==", true)
             .get()
@@ -43,17 +40,17 @@ export default function KycUpload({steps, setSteps}) {
                 console.log("Error getting documents: ", error);
             });
          */
-
-
+        console.log("logged in user in KYC", loggedInUser);
 
         let addKycToUserDoc = async () => {
-          
           await db
-          .collection("users").doc(loggedInUser).update({
-            KycPhotos: kycImageArray
-          })
-            setSteps(steps + 1 )
-        }
+            .collection("users")
+            .doc(loggedInUser.uid)
+            .update({
+              KycPhotos: kycImageArray
+            });
+          setSteps(steps + 1);
+        };
 
         console.log("kycimagearray", kycImageArray);
         let handleUpload = e => {
@@ -104,7 +101,9 @@ export default function KycUpload({steps, setSteps}) {
                   />
                 ))}
               </div>
-              <button onClick={() => addKycToUserDoc()}>Submit for verification</button>
+              <button onClick={() => addKycToUserDoc()}>
+                Submit for verification
+              </button>
             </ImageUploadStyle>
           </div>
         );

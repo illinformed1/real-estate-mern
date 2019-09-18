@@ -1,51 +1,81 @@
-import React, { useState } from "react";
-import firebase from "../firebase/index";
+import React, { useState, useContext, useEffect } from "react";
+import firebase, { db } from "../firebase/index";
 import styled from "styled-components";
+import UserBio from "./user-bio";
+
+import LoggedInTitle from "./loggedin-title";
+import UserListingsSlider from "./user-listings-slider";
+import SideBar from "./side-bar";
+import { Button, Icon } from "semantic-ui-react";
+import { AppContext } from "./app-context-provider";
 
 export default function SignedInHome() {
-  const [userInfo, setUserInfo] = useState({});
+  let context = useContext(AppContext);
+  const { loggedInUser } = context;
+  const [loading, setLoading] = useState(true);
+
+  const [userListings, setUserListings] = useState([]);
+
+  useEffect(() => {
+    console.log("logged in user in Effect", loggedInUser);
+    let getUserListings = async () => {
+      const query = db
+        .collection("users")
+        .doc(loggedInUser.uid)
+        .collection("listings");
+      let snapshot = await query.get();
+      let listings = snapshot.docs.map(doc => doc.data());
+      setUserListings(listings);
+    };
+
+    if (loggedInUser) {
+      getUserListings();
+      setLoading(false);
+    }
+  }, [loggedInUser]);
 
   let signOut = () => {
     return firebase.auth().signOut();
   };
 
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      console.log("signed in", user);
-      setUserInfo(user);
-    } else {
-      console.log("not signed in", user);
-      setUserInfo(user);
-    }
-  });
+  console.log("whats in here", loggedInUser);
 
-  console.log(userInfo);
+  if (!userListings) {
+    return <h1>loading...</h1>;
+  } else {
+    return (
+      <div>
+        <SideBar />
+        <DashBoardStyle>
+          <Button
+            className="sign-out-btn"
+            color="red"
+            onClick={() => signOut()}
+          >
+            Sign out
+          </Button>
+          <UserBio loggedInUser={loggedInUser} />
 
-  return (
-    <div>
-      <h1>
-        Welcome{" "}
-        {userInfo.displayName ? (
-          userInfo.displayName
-            .toLowerCase()
-            .split(" ")
-            .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-            .join(" ")
-        ) : (
-          <h3>loading</h3>
-        )}{" "}
-        You Are Signed In
-      </h1>
-      <button onClick={() => signOut()}>Sign out</button>
-
-      <DashBoardStyle>
-        <div className="add a listing">add a listing</div>
-        <div className="check on listings">check on listings</div>
-        <div className="run a promotion">run a promotion</div>
-        <div className="update profile">update profile</div>
-      </DashBoardStyle>
-    </div>
-  );
+          <UserListingsSlider userListings={userListings} />
+        </DashBoardStyle>
+      </div>
+    );
+  }
 }
 
-const DashBoardStyle = styled.div``;
+const DashBoardStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-size: contain;
+  width: 100vw;
+  height: 100vh;
+  background: #ededed;
+
+  .sign-out-btn {
+    position: absolute;
+    right: 2rem;
+    top: 2rem;
+  }
+`;
