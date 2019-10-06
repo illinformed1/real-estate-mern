@@ -1,7 +1,7 @@
 import React from "react";
 import CreateListingForm from "./create-listing-form";
 import { db } from "../../firebase/index";
-
+import axios from "axios";
 import firebase, { firestore } from "firebase";
 import { AppContext } from "../app-context-provider";
 
@@ -11,6 +11,16 @@ class CreateListing extends React.Component {
     buyDocumentsInDB: 0,
     rentOrBuy: ""
   };
+
+  /* ------------Algolia I THINK THIS ISN'T USED AND FIREBASE CF HANDLES------------------ */
+
+  addSearchListing = obj => {
+    axios
+      .post("http://localhost:4000/add-search-listing", obj)
+      .then(res => console.log(res));
+  };
+
+  /* ---------- Firebase ---------- */
 
   setRentOrBuy = selection => {
     this.setState({ rentOrBuy: selection });
@@ -76,7 +86,7 @@ class CreateListing extends React.Component {
               .doc(loggedInUser.uid)
               .collection("listings")
               .add({
-                Num: this.state.rentDocumentsInDB,
+                //Num: this.state.rentDocumentsInDB,
                 CreatedAt: firestore.FieldValue.serverTimestamp(),
                 Type: obj.Type,
                 Title: obj.Title,
@@ -112,7 +122,7 @@ I don't know if this is best practice. Will use later as route params
                 .doc("listings")
                 .collection("rent")
                 .add({
-                  Num: this.state.rentDocumentsInDB,
+                  //Num: this.state.rentDocumentsInDB,
                   CreatedAt: firestore.FieldValue.serverTimestamp(),
                   Type: obj.Type,
                   Title: obj.Title,
@@ -143,6 +153,8 @@ I don't know if this is best practice. Will use later as route params
                     )
                 );
 
+              this.addSearchListing(obj);
+
               /* <--------- Add Same Listing To A Specific User ------------> */
             } else if (this.state.rentOrBuy === "buy") {
               /* Batch updates the count in --stats-- as new documents are added*/
@@ -160,7 +172,7 @@ I don't know if this is best practice. Will use later as route params
                 .doc("listings")
                 .collection("buy")
                 .add({
-                  Num: this.state.buyDocumentsInDB,
+                  //Num: this.state.buyDocumentsInDB,
                   CreatedAt: firestore.FieldValue.serverTimestamp(),
                   Type: obj.Type,
                   Title: obj.Title,

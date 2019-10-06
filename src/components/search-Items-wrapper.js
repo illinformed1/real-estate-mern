@@ -13,18 +13,21 @@ var formatter = new Intl.NumberFormat("en-US", {
   currency: "PHP"
 });
 
-export default function ListingItem({
-  Title,
-  Description,
-  Tagline,
-  City,
-  Province,
-  Beds,
-  ID,
-  Baths,
-  ImageURLArray,
-  Price
-}) {
+export default function SearchItems({ hit }) {
+  console.log(hit);
+
+  const {
+    Title,
+    Description,
+    Tagline,
+    ObjectID,
+    City,
+    Province,
+    Beds,
+    Baths,
+    ImageURLArray,
+    Price
+  } = hit;
   const [imageCount, setImageCount] = useState(0);
 
   console.log("Image URL Array test", ImageURLArray);
@@ -66,79 +69,93 @@ export default function ListingItem({
 
   console.log(size);
   return (
-    <CardStyling
-      image1={
-        ImageURLArray === undefined
-          ? "/loading-background.gif"
-          : ImageURLArray[imageCount]
-      }
-      image2={
-        ImageURLArray === undefined
-          ? "/loading-background.gif"
-          : ImageURLArray[imageCount]
-      }
-    >
-      <div className="img-div-wrapper" ref={ref}>
-        <div className="img-slider">
-          {ImageURLArray === undefined
-            ? null
-            : ImageURLArray.map((img, index) => (
-                <Image
-                  width={`${size.windowWidth}px`}
-                  height={size.windowHeight}
-                  style={slideSpring}
-                  image={img}
-                />
-              ))}
+    <ListingGridStyle>
+      <CardStyling
+        image1={
+          ImageURLArray === undefined
+            ? "/loading-background.gif"
+            : ImageURLArray[imageCount]
+        }
+        image2={
+          ImageURLArray === undefined
+            ? "/loading-background.gif"
+            : ImageURLArray[imageCount]
+        }
+      >
+        <div className="img-div-wrapper" ref={ref}>
+          <div className="img-slider">
+            {ImageURLArray === undefined
+              ? null
+              : ImageURLArray.map((img, index) => (
+                  <Image
+                    width={`${size.windowWidth}px`}
+                    height={size.windowHeight}
+                    style={slideSpring}
+                    image={img}
+                  />
+                ))}
+          </div>
+
+          {ImageURLArray.length > 1 ? (
+            <span
+              className="left-chevron"
+              onClick={() => handleImageDecrement()}
+            >
+              <Icon name="chevron left" />
+            </span>
+          ) : null}
+
+          {ImageURLArray.length > 1 ? (
+            <span
+              className="right-chevron"
+              onClick={() => handleImageIncrement()}
+            >
+              <Icon
+                name="chevron right"
+                style={{ position: "relative", left: "0.2rem" }}
+              />
+            </span>
+          ) : null}
+
+          <div className="image-counter">
+            <span>
+              {imageCount + 1}/{/*ImageURLArray.length*/}
+            </span>
+            <Icon name="image" />
+          </div>
         </div>
 
-        {/*ImageURLArray.length > 1 ? (
-          <span className="left-chevron" onClick={() => handleImageDecrement()}>
-            <Icon name="chevron left" />
-          </span>
-        ) : null*/}
+        <div className="card-text" onClick={() => ObjectID}>
+          <Link to={`/listing-item/${ObjectID}`}>
+            <h2 className="title">{Title}</h2>
+          </Link>
 
-        {/*ImageURLArray.length > 1 ? (
-          <span
-            className="right-chevron"
-        onClick={() => handleImageIncrement()}
-          >
-            <Icon
-              name="chevron right"
-              style={{ position: "relative", left: "0.2rem" }}
-            />
-          </span>
-        ) : null*/}
-
-        <div className="image-counter">
+          <h4 className="price">{formatter.format(Price)}</h4>
+          <div className="beds-bath-and-beyond">
+            <Icon name="bed" />
+            {Beds}
+            <Icon name="bath" />
+            {Baths}
+          </div>
           <span>
-            {imageCount + 1}/{/*ImageURLArray.length*/}
+            {City}, {Province}
           </span>
-          <Icon name="image" />
+
+          <div>2 days ago</div>
         </div>
-      </div>
-
-      <div className="card-text" onClick={() => ID}>
-        <Link to={`/listing-item/${ID}`}>
-          <h2 className="title">{Title}</h2>
-        </Link>
-
-        <h4 className="price">{formatter.format(Price)}</h4>
-        <div className="beds-bath-and-beyond">
-          <Icon name="bed" />
-          {Beds}
-          <Icon name="bath" />
-          {Baths}
-        </div>
-        <span>
-          {City}, {Province}
-        </span>
-
-        <div>2 days ago</div>
-      </div>
-    </CardStyling>
+      </CardStyling>
+    </ListingGridStyle>
   );
 }
+
+const ListingGridStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background: #ededed;
+`;
 
 const Image = styled(animated.div)`
   background: url(${props => props.image});

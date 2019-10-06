@@ -52,16 +52,16 @@ let RentListings = () => {
               {listingsOrSearch().map((listing, index) => (
                 <ListingItem
                   key={index}
-                  tagline={listing.Tagline}
-                  id={listing.ID}
-                  price={listing.Price}
-                  title={listing.Title}
-                  city={listing.City}
-                  province={listing.Province}
-                  beds={listing.Beds}
-                  baths={listing.Baths}
-                  description={listing.Description}
-                  image={listing.ImageURLArray}
+                  Tagline={listing.Tagline}
+                  ID={listing.ID}
+                  Price={listing.Price}
+                  Title={listing.Title}
+                  City={listing.City}
+                  Province={listing.Province}
+                  Beds={listing.Beds}
+                  Baths={listing.Baths}
+                  Description={listing.Description}
+                  ImageURLArray={listing.ImageURLArray}
                 />
               ))}
               <Pagination handlePaginationClick={handlePaginationClick} />

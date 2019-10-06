@@ -4,7 +4,7 @@ import "firebase/auth";
 import "firebase/firestore";
 
 var firebaseConfig = {
-  apiKey: "AIzaSyBWfHzaeFaVnLFFtuFu2R4MzeHEUfjoY0s",
+  apiKey: "AIzaSyBWfHzaeFaVnLFFtuFu2R4MzeHEUfjoY0s", //It's okay for Firebase Api to be public
   authDomain: "real-estate-946be.firebaseapp.com",
   databaseURL: "https://real-estate-946be.firebaseio.com",
   projectId: "real-estate-946be",

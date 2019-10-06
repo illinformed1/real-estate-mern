@@ -3,6 +3,7 @@ import { Route, Link } from "react-router-dom";
 import Listings from "./listings";
 import { AppContext } from "./app-context-provider";
 import firebase from "../firebase/index";
+import axios from "axios";
 import Home from "./home-component";
 import Profile from "./signed-in-home";
 import CreateAccount from "./create-account-directory/create-account";

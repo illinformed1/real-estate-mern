@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Segment } from "semantic-ui-react";
 import ListingTypeButtons from "./listing-type-buttons";
 import SearchBarInput from "./search-bar-input";
+import { InstantSearch } from "react-instantsearch-dom";
 import SearchParamsDropdowns from "./search-params-dropdowns";
 import { AppContext } from "../app-context-provider";
+import algoliasearch from "algoliasearch";
 
-const Search = () => (
+const Search = () => {
   /* First I need the user search input
 
 this is going to be an object that contains the words they are searching from 
@@ -28,35 +30,41 @@ step 3 = handle a search event
 
 */
 
-  <AppContext.Consumer>
-    {({
-      listings,
-      searchInput,
-      setSearchInput,
-      searchResults,
-      setSearchResults,
-      filterResults,
-      setSearchResultsToListings
-    }) => {
-      //setSearchResults(filterResults);
+  const searchClient = algoliasearch(
+    "24Z7TGX3I3",
+    "56f82530ee08fe326a3c2b78344e9c1a"
+  );
+  return (
+    <AppContext.Consumer>
+      {({
+        listings,
+        searchInput,
+        setSearchInput,
+        searchResults,
+        setSearchResults,
+        filterResults,
+        setSearchResultsToListings
+      }) => {
+        //setSearchResults(filterResults);
 
-      return (
-        <div className="search-element">
-          {("whats this", searchResults)}
-          <Segment inverted className="section">
-            <ListingTypeButtons />
-            <SearchBarInput
-              searchInput={searchInput}
-              setSearchInput={setSearchInput}
-              filterResults={filterResults}
-              setSearchResultsToListings={setSearchResultsToListings}
-            />
-            <SearchParamsDropdowns />
-          </Segment>
-        </div>
-      );
-    }}
-  </AppContext.Consumer>
-);
+        return (
+          <div className="search-element">
+            {("whats this", searchResults)}
+            <Segment inverted className="section">
+              <ListingTypeButtons />
+              <SearchBarInput
+                searchInput={searchInput}
+                setSearchInput={setSearchInput}
+                filterResults={filterResults}
+                setSearchResultsToListings={setSearchResultsToListings}
+              />
+              <SearchParamsDropdowns />
+            </Segment>
+          </div>
+        );
+      }}
+    </AppContext.Consumer>
+  );
+};
 
 export default Search;
