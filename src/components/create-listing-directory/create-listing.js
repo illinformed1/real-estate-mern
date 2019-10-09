@@ -64,7 +64,6 @@ class CreateListing extends React.Component {
     //makes sure everything is good to go before mount
     await this.updateBuyDocsinDB();
     await this.updateRentDocsinDB();
-    console.log("in didMount", this.state.documentsInDB);
   }
 
   render() {
@@ -86,7 +85,7 @@ class CreateListing extends React.Component {
               .doc(loggedInUser.uid)
               .collection("listings")
               .add({
-                //Num: this.state.rentDocumentsInDB,
+                Num: this.state.rentDocumentsInDB,
                 CreatedAt: firestore.FieldValue.serverTimestamp(),
                 Type: obj.Type,
                 Title: obj.Title,
@@ -122,7 +121,7 @@ I don't know if this is best practice. Will use later as route params
                 .doc("listings")
                 .collection("rent")
                 .add({
-                  //Num: this.state.rentDocumentsInDB,
+                  Num: this.state.rentDocumentsInDB,
                   CreatedAt: firestore.FieldValue.serverTimestamp(),
                   Type: obj.Type,
                   Title: obj.Title,

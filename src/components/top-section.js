@@ -7,12 +7,14 @@ export default function TopSection() {
   return (
     <div
       style={{
+        gridArea: "header",
         backgroundImage: `url(${image})`,
         width: "100%",
         height: "60vh",
         backgroundPosition: "center",
         backgroundSize: "cover",
-        backgroundRepeat: "no-repeat"
+        backgroundRepeat: "no-repeat",
+        position: "relative"
       }}
     >
       <SearchStyle>

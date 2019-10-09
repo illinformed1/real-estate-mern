@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { Dropdown, Input, Label, Button, Icon } from "semantic-ui-react";
 
 import {
@@ -248,30 +249,31 @@ export default function CreateListingForm({ assembleObject, setRentOrBuy }) {
                   className="description-box"
                 />
               </div>
-
-              <button
-                onClick={e =>
-                  assembleObject(e, {
-                    Type,
-                    Title,
-                    Tagline,
-                    City,
-                    associatedProvince,
-                    Beds,
-                    Baths,
-                    Cars,
-                    selectedFeatures,
-                    Terms,
-                    Price,
-                    Bond,
-                    Description,
-                    ImageURLArray
-                  })
-                }
-                class="btn btn-info"
-              >
-                Submit
-              </button>
+              <Link to="/thank-you">
+                <button
+                  onClick={e =>
+                    assembleObject(e, {
+                      Type,
+                      Title,
+                      Tagline,
+                      City,
+                      associatedProvince,
+                      Beds,
+                      Baths,
+                      Cars,
+                      selectedFeatures,
+                      Terms,
+                      Price,
+                      Bond,
+                      Description,
+                      ImageURLArray
+                    })
+                  }
+                  class="btn btn-info"
+                >
+                  Submit
+                </button>
+              </Link>
             </form>
           </div>
         </div>

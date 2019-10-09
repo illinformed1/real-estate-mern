@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Fragment } from "react";
 import styled from "styled-components";
-import ListingItem from "./listing-item";
-import { AppContext } from "./app-context-provider";
-import Pagination from "./Pagination";
+import ListingItem from "./listing-card";
+import { AppContext } from "../app-context-provider";
+import Pagination from "../Pagination";
 
 let BuyListings = () => {
   return (

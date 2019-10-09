@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { db } from "../firebase/index";
+import { db } from "../../firebase/index";
 import styled from "styled-components";
 import { Icon } from "semantic-ui-react";
-import GoogleMaps from "../components/google-maps";
+import GoogleMaps from "../google-maps";
 
 export default function IndividualListing(props) {
   const [listing, setListing] = useState({});
@@ -12,7 +12,9 @@ export default function IndividualListing(props) {
     let getListing = async () => {
       try {
         let data = await db
-          .collection("real-estate").doc("listings").collection("rent")
+          .collection("real-estate")
+          .doc("listings")
+          .collection("rent")
           .doc(props.match.params.id)
           .get();
 
@@ -64,7 +66,6 @@ export default function IndividualListing(props) {
               </ul>
             </div>
           </div>
-         
         </ListingStyle>
       </Fragment>
     );

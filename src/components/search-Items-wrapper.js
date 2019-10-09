@@ -96,26 +96,26 @@ export default function SearchItems({ hit }) {
                 ))}
           </div>
 
-          {ImageURLArray.length > 1 ? (
-            <span
-              className="left-chevron"
-              onClick={() => handleImageDecrement()}
-            >
-              <Icon name="chevron left" />
-            </span>
-          ) : null}
+          {ImageURLArray && (
+            <React.Fragment>
+              <span
+                className="left-chevron"
+                onClick={() => handleImageDecrement()}
+              >
+                <Icon name="chevron left" />
+              </span>
 
-          {ImageURLArray.length > 1 ? (
-            <span
-              className="right-chevron"
-              onClick={() => handleImageIncrement()}
-            >
-              <Icon
-                name="chevron right"
-                style={{ position: "relative", left: "0.2rem" }}
-              />
-            </span>
-          ) : null}
+              <span
+                className="right-chevron"
+                onClick={() => handleImageIncrement()}
+              >
+                <Icon
+                  name="chevron right"
+                  style={{ position: "relative", left: "0.2rem" }}
+                />
+              </span>
+            </React.Fragment>
+          )}
 
           <div className="image-counter">
             <span>
@@ -154,7 +154,6 @@ const ListingGridStyle = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  background: #ededed;
 `;
 
 const Image = styled(animated.div)`

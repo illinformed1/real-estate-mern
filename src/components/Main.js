@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Route, Link } from "react-router-dom";
-import Listings from "./listings";
+import Listings from "./listings-directory/rent-or-buylistings";
 import { AppContext } from "./app-context-provider";
 import firebase from "../firebase/index";
 import axios from "axios";
@@ -9,7 +9,8 @@ import Profile from "./signed-in-home";
 import CreateAccount from "./create-account-directory/create-account";
 import CreateListing from "./create-listing-directory/create-listing";
 import ShareComponent from "./share-directory/share-component";
-import IndividualListing from "./individual-listing";
+import IndividualListing from "./listings-directory/individual-listing";
+import ThankYou from "./create-listing-directory/thank-you";
 
 /* Difference between SignedIn and SignedUp */
 
@@ -45,6 +46,7 @@ export default function Main() {
         path="/create-account"
         component={signedIn ? Profile : CreateAccount}
       />
+      <Route path="/thank-you" component={ThankYou} />
       <Route
         path="/createlisting"
         component={signedIn && userConfirmed ? CreateListing : CreateAccount}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Fragment } from "react";
 import styled from "styled-components";
-import ListingItem from "./listing-item";
-import { AppContext } from "./app-context-provider";
-import Pagination from "./Pagination";
+import ListingItem from "./listing-card";
+import { AppContext } from "../app-context-provider";
+import Pagination from "../Pagination";
 
 /* thoughts 
 
@@ -39,17 +39,22 @@ if context.state {
 
 */
 
-let RentListings = () => {
+let ListingsPage = () => {
   return (
     <AppContext.Consumer>
-      {({ listings, searchResults, handlePaginationClick, setPage }) => {
-        let listingsOrSearch = () =>
-          searchResults.length !== 0 ? searchResults : listings;
-
+      {({ listings, handlePaginationClick, setPage }) => {
+        console.log("why no listings", listings);
         return (
           <Fragment>
-            <ListingGridStyle>
-              {listingsOrSearch().map((listing, index) => (
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                width: "100vw",
+                justifyContent: "space-evenly"
+              }}
+            >
+              {listings.map((listing, index) => (
                 <ListingItem
                   key={index}
                   Tagline={listing.Tagline}
@@ -64,8 +69,8 @@ let RentListings = () => {
                   ImageURLArray={listing.ImageURLArray}
                 />
               ))}
-              <Pagination handlePaginationClick={handlePaginationClick} />
-            </ListingGridStyle>
+            </div>
+            <Pagination handlePaginationClick={handlePaginationClick} />
           </Fragment>
         );
       }}
@@ -73,13 +78,4 @@ let RentListings = () => {
   );
 };
 
-const ListingGridStyle = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  background: #ededed;
-`;
-
-export default RentListings;
+export default ListingsPage;

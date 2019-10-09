@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
 import { Icon } from "semantic-ui-react";
@@ -13,21 +13,22 @@ var formatter = new Intl.NumberFormat("en-US", {
   currency: "PHP"
 });
 
-export default function ListingItem({
-  Title,
-  Description,
-  Tagline,
-  City,
-  Province,
-  Beds,
-  ID,
-  Baths,
-  ImageURLArray,
-  Price
-}) {
+export default function ListingCard(props) {
+  const {
+    Title,
+    Description,
+    Tagline,
+    City,
+    Province,
+    Beds,
+    ID,
+    Baths,
+    ImageURLArray,
+    Price
+  } = props.hit || props;
   const [imageCount, setImageCount] = useState(0);
 
-  console.log("Image URL Array test", ImageURLArray);
+  console.log(props);
 
   let resizeWindow = () => {
     setSize({
@@ -66,77 +67,70 @@ export default function ListingItem({
 
   console.log(size);
   return (
-    <CardStyling
-      image1={
-        ImageURLArray === undefined
-          ? "/loading-background.gif"
-          : ImageURLArray[imageCount]
-      }
-      image2={
-        ImageURLArray === undefined
-          ? "/loading-background.gif"
-          : ImageURLArray[imageCount]
-      }
-    >
-      <div className="img-div-wrapper" ref={ref}>
-        <div className="img-slider">
-          {ImageURLArray === undefined
-            ? null
-            : ImageURLArray.map((img, index) => (
-                <Image
-                  width={`${size.windowWidth}px`}
-                  height={size.windowHeight}
-                  style={slideSpring}
-                  image={img}
-                />
+    <ListingFlex>
+      <CardStyling type={City}>
+        <div className="img-div-wrapper" ref={ref}>
+          <div className="img-slider">
+            {ImageURLArray &&
+              ImageURLArray.map((img, index) => (
+                <NavLink to={`/listing-item/${ID}`} className="nav-link">
+                  <Image
+                    width={`${size.windowWidth}px`}
+                    height={size.windowHeight}
+                    style={slideSpring}
+                    image={img}
+                  />
+                </NavLink>
               ))}
+          </div>
+
+          {ImageURLArray && (
+            <React.Fragment>
+              <span
+                className="left-chevron"
+                onClick={() => handleImageDecrement()}
+              >
+                <Icon name="chevron left" />
+              </span>
+
+              <span
+                className="right-chevron"
+                onClick={() => handleImageIncrement()}
+              >
+                <Icon
+                  name="chevron right"
+                  style={{ position: "relative", left: "0.2rem" }}
+                />
+              </span>
+
+              <div className="image-counter">
+                <span>
+                  {imageCount + 1}/{ImageURLArray.length}
+                </span>
+                <Icon name="image" />
+              </div>
+            </React.Fragment>
+          )}
         </div>
 
-        {/*ImageURLArray.length > 1 ? (
-          <span className="left-chevron" onClick={() => handleImageDecrement()}>
-            <Icon name="chevron left" />
-          </span>
-        ) : null*/}
-
-        {/*ImageURLArray.length > 1 ? (
-          <span
-            className="right-chevron"
-        onClick={() => handleImageIncrement()}
-          >
-            <Icon
-              name="chevron right"
-              style={{ position: "relative", left: "0.2rem" }}
-            />
-          </span>
-        ) : null*/}
-
-        <div className="image-counter">
-          <span>
-            {imageCount + 1}/{/*ImageURLArray.length*/}
-          </span>
-          <Icon name="image" />
-        </div>
-      </div>
-
-      <div className="card-text" onClick={() => ID}>
-        <Link to={`/listing-item/${ID}`}>
+        <div className="card-text" onClick={() => ID}>
           <h2 className="title">{Title}</h2>
-        </Link>
 
-        <h4 className="price">{formatter.format(Price)}</h4>
-        <div className="beds-bath-and-beyond">
-          <Icon name="bed" />
-          {Beds}
-          <Icon name="bath" />
-          {Baths}
+          <h4 className="price">{formatter.format(Price)}</h4>
+          <div className="beds-bath-and-beyond">
+            <Icon name="bed" />
+            {Beds}
+            <Icon name="bath" />
+            {Baths}
+          </div>
+          <span>
+            {City}, {Province}
+          </span>
+
+          <div>2 days ago</div>
         </div>
-        <span>
-          {City}, {Province}
-        </span>
-
-        <div>2 days ago</div>
-      </div>
-    </CardStyling>
+      </CardStyling>
+    </ListingFlex>
   );
 }
 
@@ -146,13 +140,17 @@ const Image = styled(animated.div)`
   background-size: contain;
 
   background-position: top;
-  width: 40rem;
+  width: ${props => props.width};
   height: 26rem;
 
   @media only screen and (max-width: 600px) {
     max-width: 90vw;
     height: 20rem;
   }
+`;
+
+const ListingFlex = styled.div`
+  display: flex;
 `;
 
 const CardStyling = styled.div`
@@ -162,7 +160,7 @@ const CardStyling = styled.div`
       height: 20rem;
     }
 
-    width: 40rem;
+    width: 41rem;
     height: 26rem;
     position: relative;
   }
@@ -172,11 +170,11 @@ const CardStyling = styled.div`
   overflow: hidden;
 
   display: grid;
-  grid-gap: 2rem;
+
   grid-template-rows: min-content 1fr;
 
-  background: white;
-  grid-gap: 1rem;
+  background: linear-gradient(#404549, #2c3438);
+
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
   .img-slider {
@@ -235,8 +233,22 @@ const CardStyling = styled.div`
 
   .card-text {
     display: flex;
-
+    color: black;
     text-align: center;
     flex-direction: column;
+    border-top: 2px solid #0d9ee0;
+    background: linear-gradient(#ffffff, #e3dfde);
+  }
+
+  .nav-link {
+    color: white;
+    margin: 0;
+    padding: 0;
+    position: relative;
+
+    &:hover {
+      transition: 1s opacity ease-in-out;
+      opacity: 0.5;
+    }
   }
 `;

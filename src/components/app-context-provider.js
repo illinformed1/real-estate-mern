@@ -4,14 +4,21 @@ import { db } from "../firebase/index";
 export const AppContext = React.createContext();
 
 export default class AppProvider extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handlePaginationClick = this.handlePaginationClick.bind(this);
+  }
+
   state = {
     test: 5,
+    currentPage: 1,
     searchInput: "",
     setSearchInput: e => this.SearchInput(e),
     listings: [],
     userConfirmed: false,
     setUserConfirmed: () => this.setUserConfirmed(),
-    handlePaginationClick: selection => this.handlePaginationClick(selection),
+    handlePaginationClick: () => this.handlePaginationClick(),
     itemsPerPage: 5,
     searchResults: [],
     page: "rent", //defaults to rent
@@ -20,7 +27,11 @@ export default class AppProvider extends Component {
     setkycImageArray: item => this.setKycImageArray(item),
     kycImageArray: [],
     loggedInUser: "",
-    setLoggedInUser: user => this.setUser(user)
+    setLoggedInUser: user => this.setUser(user),
+    bedsMin: 0,
+    bedsMax: 0,
+    setBedsMin: num => this.setState({ bedsMin: num }),
+    setBedsMax: num => this.setState({ bedsMax: num })
   };
 
   handlePaginationClick = selection => {

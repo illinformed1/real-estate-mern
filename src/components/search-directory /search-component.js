@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Segment } from "semantic-ui-react";
-import ListingTypeButtons from "./listing-type-buttons";
+import ListingTypeButtons from "./search-buttons";
 import SearchBarInput from "./search-bar-input";
 import { InstantSearch } from "react-instantsearch-dom";
 import SearchParamsDropdowns from "./search-params-dropdowns";

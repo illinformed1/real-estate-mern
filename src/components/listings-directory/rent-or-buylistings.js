@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 
-import { AppContext } from "./app-context-provider";
-import RentListings from "./rent-listings";
+import { AppContext } from "../app-context-provider";
+import RentListings from "./listings-page";
 import BuyListings from "./buy-listings";
 
 class Listings extends React.Component {
