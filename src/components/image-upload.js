@@ -1,23 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { storage } from "../firebase/index";
 import styled from "styled-components";
+import {useDidMountEffect} from "./hooks/hooks"
 
 export default function ImageUpload({ setImageURL }) {
-  const [files, setFiles] = useState();
+  const [files, setFiles] = useState([]);
 
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const [urlArray, addUrl] = useState([]);
 
-  let handleSubmit = e => {
-    e.preventDefault();
-    if (e.target.files[0]) {
-      setFiles(e.target.files[0]);
-    }
-  };
+  useDidMountEffect(() => {
 
-  let handleUpload = e => {
-    e.preventDefault();
+    handleUpload();
+   
+  },[files]);
+ 
+
+  let handleUpload = () => {
+    
     const { name } = files;
     const uploadTask = storage.ref(`images/${name}`).put(files);
     uploadTask.on(
@@ -43,6 +44,14 @@ export default function ImageUpload({ setImageURL }) {
     );
   };
 
+  let handleSubmit = e => {
+    e.preventDefault();
+    if (e.target.files[0]) {
+      setFiles(e.target.files[0]);
+    }
+   
+  };
+
   return (
     <div>
       {setImageURL(urlArray)}
@@ -51,7 +60,7 @@ export default function ImageUpload({ setImageURL }) {
         <div className="img-input">
           <input type="file" onChange={e => handleSubmit(e)} />
 
-          <button onClick={e => handleUpload(e)}>Upload</button>
+ <button onClick={e => handleUpload(e)}>Upload</button> 
         </div>
         <div className="img-render">
           {urlArray.map((image, index) => (

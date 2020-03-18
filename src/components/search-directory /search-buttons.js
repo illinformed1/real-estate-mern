@@ -28,6 +28,11 @@ export default function ListingTypeButtons() {
       <Button inverted color="blue">
         Find Agents
       </Button>
+      <Link to="/become-agent">
+      <Button inverted color="blue">
+        Become an Agent
+      </Button>
+      </Link>
     </div>
   );
 }

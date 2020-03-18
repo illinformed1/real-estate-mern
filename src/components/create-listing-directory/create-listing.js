@@ -9,9 +9,20 @@ class CreateListing extends React.Component {
   state = {
     rentDocumentsInDB: 0,
     buyDocumentsInDB: 0,
-    rentOrBuy: ""
+    rentOrBuy: "",
+    rounded: 0,
+    
   };
 
+
+roundingHelperFunction(length) {
+return 10 ** (parseInt(length) -1)
+}
+
+
+
+
+  
   /* ------------Algolia I THINK THIS ISN'T USED AND FIREBASE CF HANDLES------------------ */
 
   addSearchListing = obj => {
@@ -60,6 +71,11 @@ class CreateListing extends React.Component {
       });
   };
 
+  roundPrice = (price) => {
+    let rounded = Math.round(price/this.roundingHelperFunction(price.toString().length)) * this.roundingHelperFunction(price.toString().length)
+    this.setState({rounded})
+  }
+
   async componentDidMount() {
     //makes sure everything is good to go before mount
     await this.updateBuyDocsinDB();
@@ -67,6 +83,9 @@ class CreateListing extends React.Component {
   }
 
   render() {
+
+    
+
     return (
       <AppContext.Consumer>
         {({ loggedInUser }) => {
@@ -76,7 +95,11 @@ class CreateListing extends React.Component {
             e.preventDefault();
             await this.updateBuyDocsinDB();
             await this.updateRentDocsinDB();
+            console.log("obj.Price", obj.Price)
+            this.roundPrice(obj.Price);
+            
 
+            
             console.log("in render", this.state.documentsInDB);
 
             const increment = firebase.firestore.FieldValue.increment(1);
@@ -98,6 +121,7 @@ class CreateListing extends React.Component {
                 Features: obj.selectedFeatures,
                 Terms: obj.Terms,
                 Price: obj.Price,
+                AveragePrice: this.state.rounded,
                 Bond: obj.Bond,
                 Description: obj.Description,
                 ImageURLArray: obj.ImageURLArray
@@ -134,12 +158,13 @@ I don't know if this is best practice. Will use later as route params
                   Features: obj.selectedFeatures,
                   Terms: obj.Terms,
                   Price: obj.Price,
+                  AveragePrice: this.state.rounded,
                   Bond: obj.Bond,
                   Description: obj.Description,
                   ImageURLArray: obj.ImageURLArray
                 })
-                .then(doc =>
-                  db
+                .then(doc => { console.log(doc)
+                    return db
                     .collection("real-estate")
                     .doc("listings")
                     .collection("rent")
@@ -150,7 +175,7 @@ I don't know if this is best practice. Will use later as route params
                       },
                       { merge: true }
                     )
-                );
+                    })
 
               this.addSearchListing(obj);
 

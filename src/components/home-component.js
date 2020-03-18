@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import styled from "styled-components";
 import firebase from "../firebase/index";
@@ -7,6 +7,9 @@ import SearchItems from "./search-Items-wrapper";
 import ListingCard from "./listings-directory/listing-card";
 import Listings from "./listings-directory/listings-page";
 import { AppContext } from "./app-context-provider";
+import { Dropdown, Input, Button } from 'semantic-ui-react'
+import {numberDropHandler, priceDropHandler} from "./utils";
+
 
 import "./search.css";
 
@@ -35,6 +38,11 @@ export default function Home() {
     return arr;
   };
 
+
+  const [beds, setBed] = useState([])
+  const [baths, setBath] = useState([])
+  const [priceMin, setPriceMin] = useState()
+  const [priceMax, setPriceMax] = useState()
   console.log("bed range", getBedRange());
 
   console.log("context in home", context.bedsMin);
@@ -63,15 +71,20 @@ export default function Home() {
   );
   console.log("render test");
   return (
+    <React.Fragment>
+    
     <InstantSearch indexName="listings" searchClient={searchClient}>
+    <TopSection />
       <HomeGrid>
-        <TopSection />
-
-        <div style={{ position: "sticky", top: "0", gridArea: "sidebar" }}>
+       
+        
+        
+        <div>
           <StyledFirebaseAuth
             uiConfig={uiConfig}
             firebaseAuth={firebase.auth()}
           />
+          
           <FilterBar>
             <div>
               <div className="item">
@@ -88,20 +101,44 @@ export default function Home() {
               </div>
               <div className="item">
                 <span>
-                  Price
-                  <Icon name="caret down" />
+                <Dropdown 
+                color="black"
+    placeholder='Number Of Bathrooms'
+    fluid
+    multiple
+    onChange={(e) => setBath(numberDropHandler(baths, e.target.textContent))}
+    selection
+    options={[{key: 1, text:"1", value:1}, {key: 2, text:"2", value:2}, {key: 3, text:"3", value:3}]}
+  />
                 </span>
               </div>
-              <div className="item">
+              <div className="price-item">
                 <span>
-                  Bed Rooms
-                  <Icon name="caret down" />
+                    <Input 
+                      onChange={(e) => setPriceMin(e.target.textContent)}
+                      placeholder = "Min"
+                    />
+
+                    <Input 
+                      onChange={(e) => setPriceMax(e.target.textContent)}
+                      placeholder = "Max"
+                    />
+                
+               
+                <Button onClick={() => priceDropHandler(priceMin, priceMax)}color='orange' content="Filter" />
                 </span>
-              </div>
+                  </div>
               <div className="item">
                 <span>
-                  Bath Rooms
-                  <Icon name="caret down" />
+                <Dropdown 
+                color="black"
+    placeholder='Number Of Bathrooms'
+    fluid
+    multiple
+    onChange={(e) => setBath(numberDropHandler(baths, e.target.textContent))}
+    selection
+    options={[{key: 1, text:"1", value:1}, {key: 2, text:"2", value:2}, {key: 3, text:"3", value:3}]}
+  />
                 </span>
               </div>
               <div className="item">
@@ -114,51 +151,81 @@ export default function Home() {
           </FilterBar>
         </div>
 
-        <div>
-          {/* I want to enter my drop down state into here and get back the correct search result  */}
+        {console.log("what is the beds", beds)}
+        
 
-          <RefinementList attribute="Beds" defaultRefinement={getBedRange()} />
-          <RefinementList attribute="Baths" />
+        <div>
+          {/* Warning!!! Dirty Hack. Invisible Refinements That Are Controlled By The Dropdown
+          
+          Okay, now I have an average price that I can use to group the blahs. So Now for each one I just need to put every thousand difference into the blah. 
+
+          */}
+
+          <RefinementList attribute="Beds" defaultRefinement={beds} ></RefinementList>
+          <RefinementList attribute="Baths" defaultRefinement={baths}></RefinementList>
+          <RefinementList attribute="AveragePrice"></RefinementList>
+          
         </div>
+    
 
         <div style={{ gridArea: "search" }}>
           <Hits hitComponent={ListingCard} />
           <Pagination />
         </div>
-        <div style={{ gridArea: "Listings" }}>
+       
+        </HomeGrid>
+        </InstantSearch>
+        
           <Listings />
-        </div>
-      </HomeGrid>
-    </InstantSearch>
+        
+      </React.Fragment>
+    
   );
 }
 
 const HomeGrid = styled.div`
-  display: grid;
-  grid-template-areas:
-    "header header header"
-    " sidebar search ."
-    " Listings Listings Listings";
-  grid-template-columns: 1fr 1fr 1fr;
-  background: #f5f5f5;
-
-  width: 100vw;
+  display: flex;
+  width:100vw;
+  justify-content: space-around;
+  
+  
 `;
+
+const ScrollingSection = styled.div`
+background:blue;
+height: 50rem;
+`
 
 const FilterBar = styled.div`
   grid-area: sidebar;
   display: flex;
+  position: sticky;
+  top: 0;
+  
+  gridArea: sidebar;
 
-  align-items: center;
+  
   flex-direction: column;
 
   .item {
     position: relative;
     border-top: 1px solid black;
     display: flex;
+    
     align-items: center;
     width: 20rem;
-    height: 5rem;
+    height: 7rem;
+    
+  }
+
+  .price-item {
+    position: relative;
+    border-top: 1px solid black;
+    display: flex;
+    
+    align-items: center;
+    width: 20rem;
+    height: 9rem;
   }
 
   i {

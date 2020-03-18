@@ -11,6 +11,8 @@ import CreateListing from "./create-listing-directory/create-listing";
 import ShareComponent from "./share-directory/share-component";
 import IndividualListing from "./listings-directory/individual-listing";
 import ThankYou from "./create-listing-directory/thank-you";
+import BecomeAgent from "./become-agent-directory/become-agent"
+
 
 /* Difference between SignedIn and SignedUp */
 
@@ -53,6 +55,7 @@ export default function Main() {
       />
       <Route path="/share" component={ShareComponent} />
       <Route path="/listing-item/:id" component={IndividualListing} />
+      <Route path="/become-agent" component={BecomeAgent}/>
     </div>
   );
 }
